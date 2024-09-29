@@ -1,0 +1,105 @@
+\documentclass[10pt,letterpaper]{article}
+\usepackage[latin1]{inputenc}
+\usepackage[spanish]{babel}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{upgreek} % para poner letras griegas sin cursiva
+\usepackage{cancel} % para tachar.
+\usepackage{mathdots} % para el comando \iddots
+\usepackage{mathrsfs}
+\usepackage{graphicx}
+\usepackage{array}
+\usepackage{appendix}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{wrapfig}
+
+\usepackage[left=4cm,right=2cm,top=2cm,bottom=2cm]{geometry}
+
+\author{Edgar Andres Barrera Vega - CC: 1032467347\\
+		\small{Maestría en Ingeniería, Facultad de Ingeniería}\\
+		\small{Universidad de Antioquia}\\
+		\small{Medellín}}
+				
+\title{PREDICCIÓN DEL CONSUMO ENERGÉTICO DE UN SISTEMA HVAC Y CARGA TÉRMICA DE UN EDIFICIO DEPENDIENDO DE LAS CONDICIONES EXTERIORES}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+En este artículo se presenta la propuesta de trabajo final para la asignatura de Deep Learning, cuyo objetivo es utilizar un conjunto de datos descargado de Kaggle sobre el consumo energético de un sistema HVAC (Heating, Ventilation and Air Conditioning) y la carga térmica de un edificio con un sistema centralizado basado en un enfriador de agua (Chiller). Los datos incluyen las variables típicas de un sistema HVAC, tanto del sistema mismo como de las condiciones exteriores. El objetivo del proyecto es predecir el consumo energético del sistema y su eficiencia EER (Energy Efficiency Ratio) en función de las condiciones exteriores.
+\end{abstract}
+
+
+\section*{Contexto de la Aplicación}
+
+Un sistema HVAC (Heating, Ventilation, and Air Conditioning, o en español Calefacción, Ventilación y Aire Acondicionado) es una tecnología esencial en edificaciones modernas, que se encarga de controlar la temperatura, la humedad y la calidad del aire dentro de un espacio. El propósito de un sistema HVAC es proporcionar confort térmico y calidad del aire adecuada tanto en edificios residenciales como comerciales. Estos sistemas consumen una parte significativa de la energía total de una edificación, ya que son responsables de mantener las condiciones internas de confort bajo diferentes condiciones climáticas exteriores.
+
+Existen diferentes tipos de sistemas HVAC según el mecanismo que utilizan para generar el enfriamiento, los cuales incluyen sistemas de expansión directa (DX) y sistemas de enfriamiento de agua. En los sistemas de expansión directa, el refrigerante absorbe el calor del aire directamente en las unidades interiores, lo que los hace adecuados para espacios pequeños o medianos. Por otro lado, los sistemas de enfriamiento de agua utilizan un proceso más complejo y son más comunes en edificaciones de gran tamaño, como edificios comerciales, hospitales y grandes oficinas.
+
+En el caso de los sistemas de enfriamiento de agua, el componente principal es el chiller. Un chiller es una máquina que elimina el calor del agua, bajando su temperatura para que pueda ser utilizada para enfriar los espacios del edificio. En un sistema HVAC con enfriamiento de agua, el chiller enfría el agua, la cual es posteriormente distribuida a través de una red de tuberías a las unidades manejadoras de aire (UMAs). Estas unidades, a su vez, hacen circular el aire interior a través de serpentines enfriados por el agua, disminuyendo la temperatura del aire antes de ser distribuido en el edificio. Finalmente, el agua calentada por el proceso de transferencia de calor es devuelta al chiller para ser nuevamente enfriada, completando el ciclo.
+
+Dado su papel preponderante en el consumo energético, la predicción del uso de energía de los sistemas HVAC se vuelve esencial para garantizar la eficiencia energética de una edificación. La capacidad para anticipar el consumo energético permite a los diseñadores y operadores implementar estrategias que optimicen el rendimiento del sistema, reduzcan costos operativos y minimicen el impacto ambiental.
+
+Por ejemplo, al emplear datos históricos y modelos de aprendizaje automático, es posible predecir el consumo energético del sistema en función de diversos factores, como las condiciones climáticas externas, la ocupación del edificio y la hora del día. Esta información es crucial para ajustar el funcionamiento del sistema HVAC, permitiendo una gestión más eficiente de los recursos energéticos.
+
+La eficiencia de los sistemas HVAC, especialmente los que utilizan chillers para el enfriamiento de agua, puede verse mejorada mediante la implementación de tecnologías de control y automatización. Estas tecnologías permiten adaptar la operación del sistema a las necesidades reales del edificio, minimizando el uso de energía durante períodos de baja demanda y evitando picos de consumo que pueden resultar en altos costos operativos.
+
+
+\section*{Objetivos de Machine Learning}
+
+El objetivo de implementar técnicas de Machine Learning es predecir el consumo energético del sistema HVAC basado en un chiller, teniendo en cuenta las condiciones externas. Además, se pretende estimar la eficiencia de este equipo en relación con la energía eléctrica consumida:
+
+\begin{enumerate}
+	\item Carga Térmica en Toneladas de Refrigeración [RT]
+	\item Eficiencia Energética EER
+\end{enumerate}
+
+Como se mencionó, nuestro enfoque incluye la predicción de la eficiencia energética (EER), que se define como la relación entre la capacidad de refrigeración, expresada en unidades inglesas (BTU/h), y el consumo eléctrico, medido en vatios. Asimismo, la carga térmica se expresará en toneladas de refrigeración y dependerá de diversas condiciones externas, tales como:
+
+\begin{enumerate}
+	\item Temperatura exterior
+	\item Temperatura de Rocío
+	\item Humedad Relativa
+	\item Velocidad del Viento
+\end{enumerate}
+
+
+\section*{Dataset}
+
+Las características de entrada del conjunto de datos incluyen: Marca de tiempo, Tasa de agua helada (L/seg), Temperatura del agua de enfriamiento (C), Carga del edificio (RT), Energía total (kWh), Temperatura (F), Punto de rocío (F), Humedad Relativa, Velocidad del viento (mph), Presión (pulgadas), Hora del día (h) y Día de la semana.
+
+Los conjuntos de datos contienen información relacionada con un edificio comercial ubicado en Singapur, desde el 18/08/2019 a las 00:00 hasta el 01/06/2020 a las 13:00, refinado a 13,561 muestras de datos tras eliminar valores atípicos y datos faltantes, y un tamaño en disco de 746.7 kB.
+
+\section*{Métricas de Desempeño}
+
+Para esta propuesta de trabajo, utilizaremos el Error Cuadrático Medio Raíz (RMSE, por sus siglas en inglés: Root Mean Square Error) como métrica de desempeño, ya que el objetivo del proyecto es abordar un problema de regresión donde intentaremos predecir dos magnitudes clave: la eficiencia energética del sistema HVAC y la carga térmica del edificio.
+
+En nuestra propuesta de trabajo, al utilizar el RMSE como métrica de desempeño, podremos cuantificar de manera efectiva la precisión de nuestras predicciones sobre la eficiencia energética del sistema HVAC y la carga térmica del edificio. Esto nos permitirá realizar ajustes y mejoras en nuestro modelo, asegurando que el sistema que estamos desarrollando sea capaz de predecir de manera fiable y precisa según los datos de entrada disponibles. En resumen, el RMSE no solo nos ayudará a medir la efectividad de nuestro modelo, sino que también proporcionará una base sólida para la optimización continua del mismo, contribuyendo a un mejor diseño y funcionamiento del sistema HVAC en el edificio.
+
+\begin{thebibliography}{99} % El número 99 se puede ajustar según la cantidad de entradas
+
+\bibitem{rahman2021energy} \textsc{Quazi Samira Rahman, Tsz Hin Jeffrey Luk, Chun Fai Siu, Helen Hoi Ling Kwok, Weiwei Chen} y \textsc{Chin Pang Cheng},
+\textit{Energy Consumption in HVAC System and Occupants? Thermal Comfort Optimization Using BIM-Supported Computational Approach}, 
+ZEMCH International Conference, páginas 572, 2021.
+
+\bibitem{abdulaziz2022energy} \textsc{Saleh Abdulaziz Almarzooq, Abdullah M Al-Shaalan, Hassan MH Farh} y \textsc{Tarek Kandil},
+\textit{Energy conservation measures and value engineering for small microgrid: new hospital as a case study}, 
+Sustainability, vol. 14, no. 4, páginas 2390, 2022, MDPI.
+
+\bibitem{gonzalez2021bim} \textsc{Jorge González, Carlos Alberto Pereira Soares, Mohammad Najjar} y \textsc{Assed N Haddad},
+\textit{BIM and BEM methodologies integration in energy-efficient buildings using experimental design}, 
+Buildings, vol. 11, no. 10, páginas 491, 2021, MDPI.
+
+\bibitem{Aggarwal} \textsc{Charu C. Aggarwal},
+\textit{Neural Networks and Deep Learning}, 
+Springer, 2018.
+
+\bibitem{deep} \textsc{Raul Ramos},
+\textit{Fundamentos de Deep Learning}, 
+Curso de posgrado, Universidad de Antioquia, 2024, Semestre: 2.
+
+\end{thebibliography}
+
+\end{document}
